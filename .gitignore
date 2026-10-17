@@ -1,0 +1,27 @@
+# ================== СЕКРЕТЫ ==================
+.env
+*.session
+*.session-journal
+
+
+# ================== СОСТОЯНИЕ ==================
+accounts.json
+state.json
+state.json.tmp
+claims.json
+bot.lock
+bot.pid
+
+# ================== ЛОГИ ==================
+*.log
+console.out.log
+console.err.log
+run_debug.log
+
+# ================== ПРОЧЕЕ ==================
+__pycache__/
+*.pyc
+.venv/
+venv/
+.aider.chat.history.md
+.aider.input.history

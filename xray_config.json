@@ -1,0 +1,579 @@
+{
+  "dns": {
+    "servers": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "queryStrategy": "UseIP"
+  },
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "protocol": [
+          "bittorrent"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "inboundTag": [
+          "socks",
+          "http"
+        ],
+        "balancerTag": "DE_STANDART_Balancer"
+      }
+    ],
+    "balancers": [
+      {
+        "tag": "DE_STANDART_Balancer",
+        "selector": [
+          "proxy-de-standart"
+        ],
+        "strategy": {
+          "type": "leastPing"
+        }
+      }
+    ],
+    "domainMatcher": "hybrid",
+    "domainStrategy": "IPIfNonMatch"
+  },
+  "inbounds": [
+    {
+      "tag": "socks",
+      "port": 10808,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "settings": {
+        "udp": true,
+        "auth": "noauth"
+      },
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": false,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    },
+    {
+      "tag": "http",
+      "port": 10809,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "settings": {
+        "allowTransparent": false
+      },
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": false,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy-de-standart",
+      "protocol": "hysteria",
+      "settings": {
+        "address": "de2s.beautysalon1122.online",
+        "port": 443,
+        "version": 2
+      },
+      "streamSettings": {
+        "network": "hysteria",
+        "hysteriaSettings": {
+          "version": 2,
+          "auth": "175b58d2-e736-4284-a666-65423534765f"
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "de2s.beautysalon1122.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-standart-2",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "de2s.beautysalon1122.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "auto",
+          "host": "",
+          "path": "/standart/",
+          "extra": {
+            "xmux": {
+              "cMaxReuseTimes": "16-32",
+              "maxConnections": "2-4",
+              "hKeepAlivePeriod": 30,
+              "hMaxReusableSecs": "300-600"
+            },
+            "headers": {},
+            "noGRPCHeader": false,
+            "xPaddingBytes": "100-1000",
+            "scMaxEachPostBytes": 1000000,
+            "scMinPostsIntervalMs": 30,
+            "scStreamUpServerSecs": "20-80"
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "de2s.beautysalon1122.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "t.advokat77-rus.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/timeweb_de1/stream.m3u8",
+          "extra": {
+            "mode": "packet-up",
+            "path": "/content/media/timeweb_de1/",
+            "seqKey": "offset",
+            "noSSEHeader": false,
+            "xPaddingKey": "q",
+            "seqPlacement": "query",
+            "sessionIDKey": "sid",
+            "uplinkDataKey": "X-Playback-Token",
+            "xPaddingBytes": "48-256",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "4096-16384",
+            "sessionIDPlacement": "query",
+            "uplinkDataPlacement": "header",
+            "scMinPostsIntervalMs": "1-8",
+            "serverMaxHeaderBytes": 32768
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "t.advokat77-rus.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-2",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "t.advokat77-rus.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/timeweb_de2/stream.m3u8",
+          "extra": {
+            "mode": "packet-up",
+            "path": "/content/media/timeweb_de2/",
+            "seqKey": "offset",
+            "noSSEHeader": false,
+            "xPaddingKey": "q",
+            "seqPlacement": "query",
+            "sessionIDKey": "sid",
+            "uplinkDataKey": "X-Playback-Token",
+            "xPaddingBytes": "48-256",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "4096-16384",
+            "sessionIDPlacement": "query",
+            "uplinkDataPlacement": "header",
+            "scMinPostsIntervalMs": "1-8",
+            "serverMaxHeaderBytes": 32768
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "t.advokat77-rus.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-3",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "t.advokat77-rus.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/timeweb_de3/stream.m3u8",
+          "extra": {
+            "mode": "packet-up",
+            "path": "/content/media/timeweb_de3/",
+            "seqKey": "offset",
+            "noSSEHeader": false,
+            "xPaddingKey": "q",
+            "seqPlacement": "query",
+            "sessionIDKey": "sid",
+            "uplinkDataKey": "X-Playback-Token",
+            "xPaddingBytes": "48-256",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "4096-16384",
+            "sessionIDPlacement": "query",
+            "uplinkDataPlacement": "header",
+            "scMinPostsIntervalMs": "1-8",
+            "serverMaxHeaderBytes": 32768
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "t.advokat77-rus.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-4",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "v.shini-77rus.site",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/stream_de2/",
+          "extra": {
+            "xmux": {
+              "cMaxReuseTimes": "0",
+              "maxConnections": "1",
+              "hKeepAlivePeriod": 0,
+              "hMaxRequestTimes": "300-600",
+              "hMaxReusableSecs": "900-1800"
+            },
+            "noSSEHeader": false,
+            "xPaddingKey": "_token",
+            "xPaddingBytes": "16-64",
+            "xPaddingHeader": "X-Signature",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "500000-1000000",
+            "uplinkDataPlacement": "body",
+            "scMinPostsIntervalMs": "50-150",
+            "scStreamUpServerSecs": "60-180"
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "v.shini-77rus.site",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-5",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "v.advokat77-rus.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/stream_de3/",
+          "extra": {
+            "xmux": {
+              "cMaxReuseTimes": "0",
+              "maxConnections": "1",
+              "hKeepAlivePeriod": 0,
+              "hMaxRequestTimes": "300-600",
+              "hMaxReusableSecs": "900-1800"
+            },
+            "noSSEHeader": false,
+            "xPaddingKey": "_token",
+            "xPaddingBytes": "16-64",
+            "xPaddingHeader": "X-Signature",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "500000-1000000",
+            "uplinkDataPlacement": "body",
+            "scMinPostsIntervalMs": "50-150",
+            "scStreamUpServerSecs": "60-180"
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "v.advokat77-rus.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-6",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "y.shini-77rus.site",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/timeweb_de2/stream.m3u8",
+          "extra": {
+            "mode": "packet-up",
+            "path": "/content/media/timeweb_de2/",
+            "seqKey": "offset",
+            "noSSEHeader": false,
+            "xPaddingKey": "q",
+            "seqPlacement": "query",
+            "sessionIDKey": "sid",
+            "uplinkDataKey": "X-Playback-Token",
+            "xPaddingBytes": "48-256",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "4096-16384",
+            "sessionIDPlacement": "query",
+            "uplinkDataPlacement": "header",
+            "scMinPostsIntervalMs": "1-8",
+            "serverMaxHeaderBytes": 32768
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "y.shini-77rus.site",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "proxy-de-bridgecdn-7",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "y.advokat77-rus.online",
+            "port": 443,
+            "users": [
+              {
+                "id": "175b58d2-e736-4284-a666-65423534765f",
+                "encryption": "none",
+                "flow": ""
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "mode": "packet-up",
+          "host": "",
+          "path": "/content/media/timeweb_de3/stream.m3u8",
+          "extra": {
+            "mode": "packet-up",
+            "path": "/content/media/timeweb_de3/",
+            "seqKey": "offset",
+            "noSSEHeader": false,
+            "xPaddingKey": "q",
+            "seqPlacement": "query",
+            "sessionIDKey": "sid",
+            "uplinkDataKey": "X-Playback-Token",
+            "xPaddingBytes": "48-256",
+            "xPaddingMethod": "tokenish",
+            "uplinkHTTPMethod": "GET",
+            "xPaddingObfsMode": true,
+            "xPaddingPlacement": "query",
+            "scMaxEachPostBytes": "4096-16384",
+            "sessionIDPlacement": "query",
+            "uplinkDataPlacement": "header",
+            "scMinPostsIntervalMs": "1-8",
+            "serverMaxHeaderBytes": 32768
+          }
+        },
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "y.advokat77-rus.online",
+          "enableSessionResumption": false,
+          "fingerprint": "chrome",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "burstObservatory": {
+    "pingConfig": {
+      "timeout": "4s",
+      "interval": "15s",
+      "sampling": 3,
+      "destination": "http://www.gstatic.com/generate_204",
+      "connectivity": ""
+    },
+    "subjectSelector": [
+      "proxy-de-standart"
+    ]
+  },
+  "remarks": "DE: socks 10808 + http 10809. Balancer pinned to proxy-de-standart (no fallback) so the exit IP never changes - Telegram kills sessions on IP switch."
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "name": "acc1",
+        "api_id": 33598185,
+        "api_hash": "ВСТАВЬ_СВОЙ_API_HASH",
+        "session": "acc1",
+        "proxy_port": 10808
+    },
+    {
+        "name": "acc2",
+        "api_id": 33598185,
+        "api_hash": "ВСТАВЬ_СВОЙ_API_HASH",
+        "session": "acc2",
+        "proxy_port": 10810
+    }
+]
